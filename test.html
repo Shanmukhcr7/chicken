@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Order hygienic, farm-fresh chicken with lightning-fast delivery. Just ₹5 for 5km. Contact us on WhatsApp now!" />
+  <title>Farm Fresh Chicken Delivery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #ff5722;
+      --accent-color: #ffd8c2;
+      --bg-gradient: linear-gradient(to bottom right, #fff0e6, #ffe9d6);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --border-radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 87, 34, 0.15);
+      border-radius: var(--border-radius);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+      border-top-left-radius: var(--border-radius);
+      border-top-right-radius: var(--border-radius);
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    .card h1 {
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+      color: #d84315;
+      line-height: 1.3;
+    }
+
+    .tagline {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+      color: #555;
+    }
+
+    .delivery-info {
+      background-color: var(--accent-color);
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      color: #4e2900;
+      line-height: 1.6;
+    }
+
+    .contact {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #e64a19;
+    }
+
+    .contact a {
+      color: #e64a19;
+      text-decoration: none;
+    }
+
+    .contact a:hover {
+      text-decoration: underline;
+    }
+
+    .location-note {
+      font-size: 0.9rem;
+      color: #6b4b3d;
+      margin-bottom: 18px;
+    }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: var(--primary-color);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      background: #d84315;
+    }
+
+    .footer {
+      padding: 16px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #6e3b0c;
+      background: #ffe1ca;
+      border-top: 1px solid #efc8ac;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        margin: 0 10px;
+      }
+      .card h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <img src="logo.png" alt="Farm fresh chicken" loading="lazy" />
+    <div class="card-body">
+      <h1>Fresh Chicken Delivered Daily</h1>
+      <p class="tagline">✨ Hygienic • Straight from our store to your home!</p>
+
+      <div class="delivery-info">
+        🚚 <strong>Delivery Charges:</strong><br>
+        📍 <strong>0–5 km:</strong> ₹5 only<br>
+        📍 <strong>5–10 km:</strong> ₹10 only
+      </div>
+
+      <p class="contact">📞 Call or WhatsApp: <a href="https://wa.me/917801035193">+91 78010 35193</a></p>
+      <p class="location-note">📍 Send us your location for fastest delivery!</p>
+
+      <a class="cta-btn" href="https://wa.me/917801035193?text=I%20want%20to%20order%20fresh%20chicken.%20Here's%20my%20location:" target="_blank">🛒 Order Now on WhatsApp</a>
+    </div>
+
+    <div class="footer">
+      🐔 Taste the Freshness — From Our Coop to Your Kitchen!
+    </div>
+  </div>
+</body>
+</html>
