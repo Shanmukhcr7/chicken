@@ -2,96 +2,161 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Select Chicken</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Fresh Chicken</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #fff4eb;
+      margin: 0;
       padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      background: #fff8f0;
+      color: #333;
     }
 
-    .form-card {
-      background: #fff;
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-
-    h2 {
-      text-align: center;
+    h1 {
       color: #d84315;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 18px;
+    .product {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
     }
 
-    select, input[type="number"], button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+    .product img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .details {
+      padding: 16px;
+      flex-grow: 1;
+    }
+
+    .details h2 {
+      margin: 0 0 8px;
+      font-size: 1.25rem;
+    }
+
+    .details p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+    }
+
+    .details input {
+      padding: 8px;
       font-size: 1rem;
+      margin-top: 6px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
-    button {
+    .total {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #e64a19;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
       background: #ff5722;
       color: white;
-      font-weight: bold;
+      font-size: 1.1rem;
       border: none;
+      border-radius: 10px;
       cursor: pointer;
-      margin-top: 24px;
+      margin-top: 20px;
     }
 
-    button:hover {
+    .btn:hover {
       background: #d84315;
     }
 
     .note {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #666;
       margin-top: 10px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="form-card">
-    <h2>Choose Your Chicken</h2>
-    <form id="orderForm">
-      <label for="type">Type:</label>
-      <select id="type" required>
-        <option value="Skin">Skin Chicken</option>
-        <option value="Skinless">Skinless Chicken</option>
-        <option value="Boneless">Boneless Chicken</option>
-      </select>
+  <h1>Order Your Fresh Chicken</h1>
 
-      <label for="quantity">Quantity (in kg):</label>
-      <input type="number" id="quantity" min="0.5" max="5" step="0.5" required />
-      <div class="note">* Max 5kg for Skin/Skinless. Boneless has no limit.</div>
-
-      <button type="submit">📦 Place Order</button>
-    </form>
+  <div class="product">
+    <img src="skin.jpg" alt="Skin Chicken">
+    <div class="details">
+      <h2>Skin Chicken</h2>
+      <p>Price per kg: ₹<span id="price-skin">180</span></p>
+      <input type="number" id="qty-skin" placeholder="Enter quantity in grams (max 5000g)">
+      <p class="total">Total: ₹<span id="total-skin">0</span></p>
+    </div>
   </div>
 
+  <div class="product">
+    <img src="skinless.jpg" alt="Skinless Chicken">
+    <div class="details">
+      <h2>Skinless Chicken</h2>
+      <p>Price per kg: ₹<span id="price-skinless">200</span></p>
+      <input type="number" id="qty-skinless" placeholder="Enter quantity in grams (max 5000g)">
+      <p class="total">Total: ₹<span id="total-skinless">0</span></p>
+    </div>
+  </div>
+
+  <div class="product">
+    <img src="boneless.jpg" alt="Boneless Chicken">
+    <div class="details">
+      <h2>Boneless Chicken</h2>
+      <p>Price per kg: ₹<span id="price-boneless">300</span></p>
+      <input type="number" id="qty-boneless" placeholder="Enter quantity in grams">
+      <p class="total">Total: ₹<span id="total-boneless">0</span></p>
+    </div>
+  </div>
+
+  <button class="btn" onclick="placeOrder()">📦 Order Now & Share Location</button>
+  <p class="note">Your location and order details will be shared via WhatsApp.</p>
+
   <script>
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+    const prices = {
+      skin: 180,      // Update price daily here
+      skinless: 200,  // Update price daily here
+      boneless: 300   // Update price daily here
+    };
 
-      const type = document.getElementById('type').value;
-      const quantity = parseFloat(document.getElementById('quantity').value);
+    function calculateTotals() {
+      ['skin', 'skinless', 'boneless'].forEach(type => {
+        const qty = parseInt(document.getElementById('qty-' + type).value) || 0;
+        const total = (qty / 1000) * prices[type];
+        document.getElementById('total-' + type).textContent = total.toFixed(2);
+      });
+    }
 
-      if ((type === 'Skin' || type === 'Skinless') && quantity > 5) {
-        alert("❌ Max 5kg allowed for Skin/Skinless chicken.");
+    document.getElementById('qty-skin').addEventListener('input', calculateTotals);
+    document.getElementById('qty-skinless').addEventListener('input', calculateTotals);
+    document.getElementById('qty-boneless').addEventListener('input', calculateTotals);
+
+    function placeOrder() {
+      const qtySkin = parseInt(document.getElementById('qty-skin').value) || 0;
+      const qtySkinless = parseInt(document.getElementById('qty-skinless').value) || 0;
+      const qtyBoneless = parseInt(document.getElementById('qty-boneless').value) || 0;
+
+      let orderText = "🛒 Order Details:\n";
+      if (qtySkin > 0) orderText += `• Skin Chicken: ${qtySkin}g (₹${((qtySkin / 1000) * prices.skin).toFixed(2)})\n`;
+      if (qtySkinless > 0) orderText += `• Skinless Chicken: ${qtySkinless}g (₹${((qtySkinless / 1000) * prices.skinless).toFixed(2)})\n`;
+      if (qtyBoneless > 0) orderText += `• Boneless Chicken: ${qtyBoneless}g (₹${((qtyBoneless / 1000) * prices.boneless).toFixed(2)})\n`;
+
+      if (!orderText.includes("•")) {
+        alert("❗ Please enter at least one quantity to order.");
         return;
       }
 
@@ -99,16 +164,17 @@
         navigator.geolocation.getCurrentPosition(function(position) {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          const message = `Hi! I want to order:\n🍗 Type: ${type}\n⚖️ Quantity: ${quantity} kg\n📍 Location: https://www.google.com/maps?q=${lat},${lon}`;
-          const whatsappUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
-          window.open(whatsappUrl, '_blank');
+          const locationURL = `https://www.google.com/maps?q=${lat},${lon}`;
+          orderText += `\n📍 My Location: ${locationURL}`;
+          const whatsappURL = `https://wa.me/917801035193?text=${encodeURIComponent(orderText)}`;
+          window.open(whatsappURL, '_blank');
         }, function() {
-          alert("⚠️ Location access denied. Please allow to proceed.");
+          alert("⚠️ Please allow location access.");
         });
       } else {
-        alert("❌ Your browser doesn't support location sharing.");
+        alert("❌ Geolocation not supported by this browser.");
       }
-    });
+    }
   </script>
 </body>
 </html>
