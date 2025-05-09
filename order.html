@@ -12,12 +12,10 @@
       padding: 20px;
       color: #333;
     }
-
     h1 {
       text-align: center;
       color: #d84315;
     }
-
     .item {
       border: 1px solid #ffccbc;
       border-radius: 12px;
@@ -28,174 +26,176 @@
       gap: 16px;
       align-items: center;
     }
-
     .item img {
       width: 120px;
       height: 120px;
       object-fit: cover;
       border-radius: 10px;
     }
-
     .details {
       flex: 1;
     }
-
-    .details label {
-      display: block;
-      margin-top: 8px;
-      font-weight: 500;
+    .details h3 {
+      margin: 0;
     }
-
-    .cart-summary {
-      border-top: 2px solid #ffab91;
-      margin-top: 30px;
-      padding-top: 20px;
-    }
-
-    .cart-summary p {
-      margin: 8px 0;
-      font-size: 1rem;
-    }
-
-    button {
+    .cart-btn {
+      padding: 10px 16px;
       background: #ff5722;
       color: white;
-      padding: 8px 14px;
       border: none;
-      font-size: 0.95rem;
-      font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 10px;
+      font-weight: bold;
     }
-
-    button:hover {
+    .cart-btn:hover {
       background: #e64a19;
     }
-
-    .total-box {
-      text-align: center;
-      font-size: 1.2rem;
-      margin-top: 20px;
-      padding: 12px;
+    .cart-summary {
       background: #ffe0b2;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       font-weight: 600;
+      margin-top: 20px;
     }
-
-    .cart-item {
-      margin-bottom: 10px;
+    button.order-btn {
+      width: 100%;
+      background: #ff5722;
+      color: white;
+      padding: 14px;
+      border: none;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button.order-btn:hover {
+      background: #e64a19;
     }
   </style>
 </head>
 <body>
-  <h1>Order Fresh Chicken</h1>
 
-  <div class="item">
-    <img src="skin.png" alt="Skin Chicken">
-    <div class="details">
-      <h3>Skin Chicken (₹<span id="priceSkin">213</span>/kg)</h3>
-      <button onclick="addToCart('Skin Chicken', prices.skin)">Add to Cart</button>
-    </div>
+<h1>Order Fresh Chicken</h1>
+
+<div class="item" data-item="skin">
+  <img src="skin.png" alt="Skin Chicken">
+  <div class="details">
+    <h3>Skin Chicken (₹<span class="price">213</span>/kg)</h3>
+    <button class="cart-btn" onclick="addToCart('skin')">Add to Cart</button>
   </div>
+</div>
 
-  <div class="item">
-    <img src="skinless.png" alt="Skinless Chicken">
-    <div class="details">
-      <h3>Skinless Chicken (₹<span id="priceSkinless">243</span>/kg)</h3>
-      <button onclick="addToCart('Skinless Chicken', prices.skinless)">Add to Cart</button>
-    </div>
+<div class="item" data-item="skinless">
+  <img src="skinless.png" alt="Skinless Chicken">
+  <div class="details">
+    <h3>Skinless Chicken (₹<span class="price">243</span>/kg)</h3>
+    <button class="cart-btn" onclick="addToCart('skinless')">Add to Cart</button>
   </div>
+</div>
 
-  <div class="item">
-    <img src="boneless.png" alt="Boneless Chicken">
-    <div class="details">
-      <h3>Boneless Chicken (₹<span id="priceBoneless">436</span>/kg)</h3>
-      <button onclick="addToCart('Boneless Chicken', prices.boneless)">Add to Cart</button>
-    </div>
+<div class="item" data-item="boneless">
+  <img src="boneless.png" alt="Boneless Chicken">
+  <div class="details">
+    <h3>Boneless Chicken (₹<span class="price">436</span>/kg)</h3>
+    <button class="cart-btn" onclick="addToCart('boneless')">Add to Cart</button>
   </div>
+</div>
 
-  <div class="cart-summary" id="cartSummary">
-    <h2>🛒 Cart</h2>
-    <div id="cartItems"></div>
-    <p id="deliveryCharge">Delivery Charge: ₹10</p>
-    <div class="total-box" id="totalBox">Total: ₹10</div>
-    <button onclick="submitOrder()">📍 Order & Share My Location</button>
-  </div>
+<div class="cart-summary" id="cartSummary">
+  🛒 No items added.
+</div>
 
-  <script>
-    const prices = {
-      skin: 213,
-      skinless: 243,
-      boneless: 436
-    };
+<button class="order-btn" onclick="submitOrder()">📍 Order & Share My Location</button>
 
-    let cart = [];
+<script>
+  const PRICES = {
+    skin: 213,
+    skinless: 243,
+    boneless: 436
+  };
 
-    function addToCart(itemName, pricePerKg) {
-      const quantity = prompt(`Enter quantity of ${itemName} in grams (500-5000):`);
+  const cart = {};
 
-      if (!quantity) return;
-
-      const qty = parseInt(quantity);
-
-      if (isNaN(qty) || qty < 500) {
-        alert("⚠️ Minimum quantity is 500 grams.");
-        return;
-      }
-
-      if (qty > 5000) {
-        alert("⚠️ Maximum quantity is 5000 grams.");
-        return;
-      }
-
-      const price = (qty / 1000) * pricePerKg;
-      cart.push({ item: itemName, qty, price });
-
-      updateCartUI();
+  function addToCart(item) {
+    const qty = parseInt(prompt("Enter quantity in grams (min 500g, max 5000g):"));
+    if (isNaN(qty) || qty < 500 || qty > 5000 || qty % 100 !== 0) {
+      alert("❗ Quantity must be between 500g and 5000g in steps of 100g.");
+      return;
     }
 
-    function updateCartUI() {
-      const cartItemsDiv = document.getElementById("cartItems");
-      cartItemsDiv.innerHTML = "";
+    cart[item] = qty;
 
-      let total = 10; // delivery charge
+    // Update button text
+    const button = document.querySelector(`[data-item="${item}"] .cart-btn`);
+    button.textContent = `Added: ${qty}g`;
 
-      cart.forEach(entry => {
-        const itemDiv = document.createElement("div");
-        itemDiv.classList.add("cart-item");
-        itemDiv.innerText = `${entry.item} - ${entry.qty}g - ₹${Math.round(entry.price)}`;
-        cartItemsDiv.appendChild(itemDiv);
-        total += entry.price;
+    alert("✅ Item added to cart.");
+    updateCartSummary();
+  }
+
+  function updateCartSummary() {
+    const summaryBox = document.getElementById("cartSummary");
+
+    if (Object.keys(cart).length === 0) {
+      summaryBox.innerHTML = "🛒 No items added.";
+      return;
+    }
+
+    let summaryHTML = "<strong>🧾 Order Summary:</strong><br><ul>";
+    let total = 0;
+
+    for (const [item, qty] of Object.entries(cart)) {
+      const pricePerKg = PRICES[item];
+      const subtotal = (qty / 1000) * pricePerKg;
+      total += subtotal;
+
+      summaryHTML += `<li>${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}</li>`;
+    }
+
+    total += 10; // delivery charge
+    summaryHTML += `</ul>🚚 Delivery: ₹10<br><strong>Total: ₹${Math.round(total)}</strong>`;
+    summaryBox.innerHTML = summaryHTML;
+  }
+
+  function submitOrder() {
+    if (Object.keys(cart).length === 0) {
+      alert("❗ Please add at least one item to cart.");
+      return;
+    }
+
+    let message = "Hello, I'd like to order:\n\n";
+    let total = 0;
+
+    for (const [item, qty] of Object.entries(cart)) {
+      const pricePerKg = PRICES[item];
+      const subtotal = (qty / 1000) * pricePerKg;
+      total += subtotal;
+      message += `${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}\n`;
+    }
+
+    total += 10;
+    message += `\nDelivery: ₹10\nTotal: ₹${Math.round(total)}\n`;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        const locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        message += `\n📍 Location: ${locationLink}`;
+        const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+      }, () => {
+        alert("⚠️ Please allow location access to continue.");
       });
-
-      document.getElementById("totalBox").innerText = `Total: ₹${Math.round(total)}`;
+    } else {
+      alert("❌ Geolocation not supported.");
     }
+  }
 
-    function submitOrder() {
-      if (cart.length === 0) {
-        alert("❗ Your cart is empty. Please add at least one item.");
-        return;
-      }
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+</script>
 
-      const orderDetails = cart.map(entry => `${entry.item}: ${entry.qty}g - ₹${Math.round(entry.price)}`).join("\n");
-      const total = document.getElementById("totalBox").innerText;
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-          const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-          const message = `Hello, I'd like to order:\n\n${orderDetails}\nDelivery Charge:Rs.10\n${total}\n\nMy Location: ${mapLink}`;
-          const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
-          window.open(waUrl, '_blank');
-        }, function() {
-          alert("⚠️ Please allow location access to continue.");
-        });
-      } else {
-        alert("❌ Geolocation not supported.");
-      }
-    }
-  </script>
 </body>
 </html>
