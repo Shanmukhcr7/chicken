@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chicken Order Page</title>
   <style>
     body {
@@ -46,13 +46,31 @@
       font-weight: 500;
     }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
+    .cart-summary {
+      border-top: 2px solid #ffab91;
+      margin-top: 30px;
+      padding-top: 20px;
+    }
+
+    .cart-summary p {
+      margin: 8px 0;
       font-size: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      margin-top: 4px;
+    }
+
+    button {
+      background: #ff5722;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #e64a19;
     }
 
     .total-box {
@@ -65,116 +83,110 @@
       font-weight: 600;
     }
 
-    button {
-      display: block;
-      width: 100%;
-      background: #ff5722;
-      color: white;
-      padding: 14px;
-      border: none;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 10px;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #e64a19;
+    .cart-item {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <h1>Order Fresh Chicken</h1>
 
-  <form id="orderForm">
-    <div class="item">
-      <img src="skin.png" alt="Skin Chicken">
-      <div class="details">
-        <h3>Skin Chicken (₹213/kg)</h3>
-        <label>Quantity (in grams):</label>
-        <input type="number" name="skin" min="500" max="5000" step="100" placeholder="e.g., 1000">
-      </div>
+  <div class="item">
+    <img src="skin.png" alt="Skin Chicken">
+    <div class="details">
+      <h3>Skin Chicken (₹<span id="priceSkin">213</span>/kg)</h3>
+      <button onclick="addToCart('Skin Chicken', prices.skin)">Add to Cart</button>
     </div>
+  </div>
 
-    <div class="item">
-      <img src="skinless.png" alt="Skinless Chicken">
-      <div class="details">
-        <h3>Skinless Chicken (₹243/kg)</h3>
-        <label>Quantity (in grams):</label>
-        <input type="number" name="skinless" min="500" max="5000" step="100" placeholder="e.g., 1000">
-      </div>
+  <div class="item">
+    <img src="skinless.png" alt="Skinless Chicken">
+    <div class="details">
+      <h3>Skinless Chicken (₹<span id="priceSkinless">243</span>/kg)</h3>
+      <button onclick="addToCart('Skinless Chicken', prices.skinless)">Add to Cart</button>
     </div>
+  </div>
 
-    <div class="item">
-      <img src="boneless.png" alt="Boneless Chicken">
-      <div class="details">
-        <h3>Boneless Chicken (₹436/kg)</h3>
-        <label>Quantity (in grams):</label>
-        <input type="number" name="boneless" min="0" max="1000" step="100" placeholder="e.g., 1000">
-      </div>
+  <div class="item">
+    <img src="boneless.png" alt="Boneless Chicken">
+    <div class="details">
+      <h3>Boneless Chicken (₹<span id="priceBoneless">436</span>/kg)</h3>
+      <button onclick="addToCart('Boneless Chicken', prices.boneless)">Add to Cart</button>
     </div>
+  </div>
 
-    <div class="total-box" id="totalBox">
-      Total: ₹0 (includes ₹10 delivery)
-    </div>
-
-    <button type="button" onclick="submitOrder()">📍 Order & Share My Location</button>
-  </form>
+  <div class="cart-summary" id="cartSummary">
+    <h2>🛒 Cart</h2>
+    <div id="cartItems"></div>
+    <p id="deliveryCharge">Delivery Charge: ₹10</p>
+    <div class="total-box" id="totalBox">Total: ₹10</div>
+    <button onclick="submitOrder()">📍 Order & Share My Location</button>
+  </div>
 
   <script>
     const prices = {
-      skin: 220,
-      skinless: 240,
-      boneless: 300,
+      skin: 213,
+      skinless: 243,
+      boneless: 436
     };
 
-    const form = document.getElementById('orderForm');
-    const totalBox = document.getElementById('totalBox');
+    let cart = [];
 
-    form.addEventListener('input', calculateTotal);
+    function addToCart(itemName, pricePerKg) {
+      const quantity = prompt(`Enter quantity of ${itemName} in grams (500-5000):`);
 
-    function calculateTotal() {
-      const skin = parseInt(form.skin.value) || 0;
-      const skinless = parseInt(form.skinless.value) || 0;
-      const boneless = parseInt(form.boneless.value) || 0;
+      if (!quantity) return;
 
-      let total = 0;
-      total += (skin / 1000) * prices.skin;
-      total += (skinless / 1000) * prices.skinless;
-      total += (boneless / 1000) * prices.boneless;
+      const qty = parseInt(quantity);
 
-      if (skin > 0 || skinless > 0 || boneless > 0) {
-        total += 10; // Delivery charge
-      }
-
-      totalBox.innerText = `Total: ₹${Math.round(total)} (includes ₹10 delivery)`;
-    }
-
-    function submitOrder() {
-      const skin = parseInt(form.skin.value) || 0;
-      const skinless = parseInt(form.skinless.value) || 0;
-      const boneless = parseInt(form.boneless.value) || 0;
-
-      if (skin === 0 && skinless === 0 && boneless === 0) {
-        alert("❗ Please select at least one item.");
+      if (isNaN(qty) || qty < 500) {
+        alert("⚠️ Minimum quantity is 500 grams.");
         return;
       }
 
-      const orderDetails = [];
+      if (qty > 5000) {
+        alert("⚠️ Maximum quantity is 5000 grams.");
+        return;
+      }
 
-      if (skin > 0) orderDetails.push(`Skin Chicken: ${skin}g`);
-      if (skinless > 0) orderDetails.push(`Skinless Chicken: ${skinless}g`);
-      if (boneless > 0) orderDetails.push(`Boneless Chicken: ${boneless}g`);
+      const price = (qty / 1000) * pricePerKg;
+      cart.push({ item: itemName, qty, price });
 
-      const total = totalBox.innerText;
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const cartItemsDiv = document.getElementById("cartItems");
+      cartItemsDiv.innerHTML = "";
+
+      let total = 10; // delivery charge
+
+      cart.forEach(entry => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("cart-item");
+        itemDiv.innerText = `${entry.item} - ${entry.qty}g - ₹${Math.round(entry.price)}`;
+        cartItemsDiv.appendChild(itemDiv);
+        total += entry.price;
+      });
+
+      document.getElementById("totalBox").innerText = `Total: ₹${Math.round(total)}`;
+    }
+
+    function submitOrder() {
+      if (cart.length === 0) {
+        alert("❗ Your cart is empty. Please add at least one item.");
+        return;
+      }
+
+      const orderDetails = cart.map(entry => `${entry.item}: ${entry.qty}g - ₹${Math.round(entry.price)}`).join("\n");
+      const total = document.getElementById("totalBox").innerText;
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-          const message = `Hello, I'd like to order:\n\n${orderDetails.join("\n")}\n\n${total}\n\nMy Location: ${mapLink}`;
+          const message = `Hello, I'd like to order:\n\n${orderDetails}\n\n${total}\n\nMy Location: ${mapLink}`;
           const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
           window.open(waUrl, '_blank');
         }, function() {
