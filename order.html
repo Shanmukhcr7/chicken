@@ -186,7 +186,7 @@
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-          const message = `Hello, I'd like to order:\n\n${orderDetails}\n\n${total}\n\nMy Location: ${mapLink}`;
+          const message = `Hello, I'd like to order:\n\n${orderDetails}\nDelivery Charge:Rs.10\n${total}\n\nMy Location: ${mapLink}`;
           const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
           window.open(waUrl, '_blank');
         }, function() {
