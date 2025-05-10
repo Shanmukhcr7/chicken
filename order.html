@@ -119,7 +119,7 @@
 
   function addToCart(item) {
   const qty = parseFloat(prompt("Enter quantity in grams (must be greater than 500g and less than 5000g):"));
-  if (isNaN(qty) || qty <= 500 || qty >= 5000) {
+  if (isNaN(qty) || qty < 500 || qty > 5000) {
     alert("❗ Quantity must be greater than 500g and less than 5000g.");
     return;
   }
