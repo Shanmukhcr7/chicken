@@ -153,8 +153,8 @@
       summaryHTML += `<li>${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}</li>`;
     }
 
-    total += 10; // delivery charge
-    summaryHTML += `</ul>🚚 Delivery: ₹10<br><strong>Total: ₹${Math.round(total)}</strong>`;
+    total += 0; // delivery charge
+    summaryHTML += `</ul>🚚 Delivery: ₹0<br><strong>Total: ₹${Math.round(total)}</strong>`;
     summaryBox.innerHTML = summaryHTML;
   }
 
@@ -174,8 +174,8 @@
       message += `${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}\n`;
     }
 
-    total += 10;
-    message += `\nDelivery: ₹10\nTotal: ₹${Math.round(total)}\n`;
+    total += 0;
+    message += `\nDelivery: ₹0\nTotal: ₹${Math.round(total)}\n`;
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
