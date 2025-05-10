@@ -1,202 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chicken Order Page</title>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #fff6f0;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      color: #d84315;
-    }
-    .item {
-      border: 1px solid #ffccbc;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-      background: #fff;
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-    .item img {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .details {
-      flex: 1;
-    }
-    .details h3 {
-      margin: 0;
-    }
-    .cart-btn {
-      padding: 10px 16px;
-      background: #ff5722;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .cart-btn:hover {
-      background: #e64a19;
-    }
-    .cart-summary {
-      background: #ffe0b2;
-      padding: 12px;
-      border-radius: 10px;
-      font-weight: 600;
-      margin-top: 20px;
-    }
-    button.order-btn {
-      width: 100%;
-      background: #ff5722;
-      color: white;
-      padding: 14px;
-      border: none;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 10px;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-    button.order-btn:hover {
-      background: #e64a19;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chicken Order Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff5722;
+            --primary-dark: #e64a19;
+            --accent-color: #ffe0b2;
+            --background-color: #fff6f0;
+            --card-background: #fff;
+            --border-color: #ffccbc;
+            --text-color: #333;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-color);
+            padding-bottom: 120px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d84315;
+            margin-bottom: 30px;
+        }
+
+        .item {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            background: var(--card-background);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .details h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .details .price {
+            font-weight: normal;
+            color: #555;
+        }
+
+        .cart-btn, .confirm-add {
+            padding: 10px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s ease;
+            text-align: center;
+        }
+
+        .cart-btn:hover, .confirm-add:hover {
+            background: var(--primary-dark);
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .quantity-controls button {
+            background: #eee;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .quantity-controls button:hover {
+            background: #ddd;
+        }
+
+        .quantity-controls .qty-input {
+            width: 60px;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            -moz-appearance: textfield;
+        }
+
+        .quantity-controls .qty-input::-webkit-outer-spin-button,
+        .quantity-controls .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .quantity-controls .confirm-add {
+            flex-grow: 1;
+            padding: 8px 16px;
+            background: var(--primary-color); /* Changed background color */
+            color: white;
+        }
+
+        .footer-cart-summary {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--accent-color);
+            padding: 10px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .footer-cart-summary .cart-summary {
+            background: none;
+            padding: 0;
+            margin-top: 0;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .footer-cart-summary .cart-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0;
+        }
+        .footer-cart-summary .cart-summary li {
+            margin-bottom: 3px;
+        }
+
+        .footer-cart-summary button.order-btn {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            padding: 14px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-top: 0;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .footer-cart-summary button.order-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .quantity-controls.hidden {
+            display: none;
+        }
+        .cart-btn.hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Order Fresh Chicken</h1>
+    <h1>Order Fresh Chicken</h1>
 
-<div class="item" data-item="skin">
-  <img src="skin.png" alt="Skin Chicken">
-  <div class="details">
-    <h3>Skin Chicken (₹<span class="price">220</span>/kg)</h3>
-    <button class="cart-btn" onclick="addToCart('skin')">Add to Cart</button>
-  </div>
-</div>
+    <div class="item" data-item="skin">
+        <img src="skin.png" alt="Skin Chicken">
+        <div class="details">
+            <h3>Skin Chicken (₹<span class="price">220</span>/kg)</h3>
+            <div class="quantity-controls hidden">
+                <button class="qty-minus">-</button>
+                <input type="number" class="qty-input" value="500" min="500" max="5000" step="100">
+                <button class="qty-plus">+</button>
+                <button class="confirm-add">Add</button>
+            </div>
+            <button class="cart-btn">Buy Now</button>
+        </div>
+    </div>
 
-<div class="item" data-item="skinless">
-  <img src="skinless.png" alt="Skinless Chicken">
-  <div class="details">
-    <h3>Skinless Chicken (₹<span class="price">250</span>/kg)</h3>
-    <button class="cart-btn" onclick="addToCart('skinless')">Add to Cart</button>
-  </div>
-</div>
+    <div class="item" data-item="skinless">
+        <img src="skinless.png" alt="Skinless Chicken">
+        <div class="details">
+            <h3>Skinless Chicken (₹<span class="price">250</span>/kg)</h3>
+            <div class="quantity-controls hidden">
+                <button class="qty-minus">-</button>
+                <input type="number" class="qty-input" value="500" min="500" max="5000" step="100">
+                <button class="qty-plus">+</button>
+                <button class="confirm-add">Add</button>
+            </div>
+            <button class="cart-btn">Buy Now</button>
+        </div>
+    </div>
 
-<div class="item" data-item="boneless">
-  <img src="boneless.png" alt="Boneless Chicken">
-  <div class="details">
-    <h3>Boneless Chicken (₹<span class="price">440</span>/kg)</h3>
-    <button class="cart-btn" onclick="addToCart('boneless')">Add to Cart</button>
-  </div>
-</div>
+    <div class="item" data-item="boneless">
+        <img src="boneless.png" alt="Boneless Chicken">
+        <div class="details">
+            <h3>Boneless Chicken (₹<span class="price">440</span>/kg)</h3>
+            <div class="quantity-controls hidden">
+                <button class="qty-minus">-</button>
+                <input type="number" class="qty-input" value="500" min="500" max="5000" step="100">
+                <button class="qty-plus">+</button>
+                <button class="confirm-add">Add</button>
+            </div>
+            <button class="cart-btn">Buy Now</button>
+        </div>
+    </div>
 
-<div class="cart-summary" id="cartSummary">
-  🛒 No items added.
-</div>
+    <div class="footer-cart-summary">
+        <div class="cart-summary" id="cartSummary">
+            🛒 No items added.
+        </div>
+        <button class="order-btn" onclick="submitOrder()">📍 Order now & Share My Location</button>
+    </div>
 
-<button class="order-btn" onclick="submitOrder()">📍 Order now & Share My Location</button>
+    <script>
+        const PRICES = {
+            skin: 220,
+            skinless: 250,
+            boneless: 440
+        };
 
-<script>
-  const PRICES = {
-    skin: 220,
-    skinless: 250,
-    boneless: 440
-  };
+        const cart = {};
 
-  const cart = {};
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
 
-  function addToCart(item) {
-  const qty = parseFloat(prompt("Enter quantity in grams (must be greater than 500g and less than 5000g):"));
-  if (isNaN(qty) || qty < 500 || qty > 5000) {
-    alert("❗ Quantity must be greater than 500g and less than 5000g.");
-    return;
-  }
+        function updateCartSummary() {
+            const summaryBox = document.getElementById("cartSummary");
 
-  cart[item] = qty;
+            if (Object.keys(cart).length === 0) {
+                summaryBox.innerHTML = "🛒 No items added.";
+                return;
+            }
 
-  // Update button text
-  const button = document.querySelector(`[data-item="${item}"] .cart-btn`);
-  button.textContent = `Added: ${qty}g`;
+            let summaryHTML = "<strong>🧾 Order Summary:</strong><br><ul>";
+            let total = 0;
 
-  alert("✅ Item added to cart.");
-  updateCartSummary();
-}
+            for (const [item, qty] of Object.entries(cart)) {
+                const pricePerKg = PRICES[item];
+                const subtotal = (qty / 1000) * pricePerKg;
+                total += subtotal;
 
-  function updateCartSummary() {
-  const summaryBox = document.getElementById("cartSummary");
+                summaryHTML += `<li>${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}</li>`;
+            }
 
-  if (Object.keys(cart).length === 0) {
-    summaryBox.innerHTML = "🛒 No items added.";
-    return;
-  }
+            summaryHTML += `</ul>🚚 Free Delivery<br><strong>Total: ₹${Math.round(total)}</strong>`;
+            summaryBox.innerHTML = summaryHTML;
+        }
 
-  let summaryHTML = "<strong>🧾 Order Summary:</strong><br><ul>";
-  let total = 0;
+        function addItemToCart(itemElement) {
+            const item = itemElement.dataset.item;
+            const qtyInput = itemElement.querySelector('.qty-input');
+            const confirmBtn = itemElement.querySelector('.confirm-add');
+            const initialBtn = itemElement.querySelector('.cart-btn');
+            const quantityControls = itemElement.querySelector('.quantity-controls');
 
-  for (const [item, qty] of Object.entries(cart)) {
-    const pricePerKg = PRICES[item];
-    const subtotal = (qty / 1000) * pricePerKg;
-    total += subtotal;
+            const qty = parseInt(qtyInput.value, 10);
 
-    summaryHTML += `<li>${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}</li>`;
-  }
+            if (isNaN(qty) || qty < 500 || qty > 5000) {
+                alert("❗ Quantity must be between 500g and 5000g.");
+                return;
+            }
 
-  summaryHTML += `</ul>🚚 Free Delivery<br><strong>Total: ₹${Math.round(total)}</strong>`;
-  summaryBox.innerHTML = summaryHTML;
-}
+            cart[item] = qty;
 
+            initialBtn.textContent = `Added: ${qty}g`;
+            quantityControls.classList.add('hidden');
+            initialBtn.classList.remove('hidden');
 
-  function submitOrder() {
-    if (Object.keys(cart).length === 0) {
-      alert("❗ Please add at least one item to cart.");
-      return;
-    }
+            alert("✅ Item added to cart.");
+            updateCartSummary();
+        }
 
-    let message = "Hello, I'd like to order:\n\n";
-    let total = 0;
+        document.querySelectorAll('.item').forEach(itemElement => {
+            const item = itemElement.dataset.item;
+            const initialBtn = itemElement.querySelector('.cart-btn');
+            const quantityControls = itemElement.querySelector('.quantity-controls');
+            const qtyInput = itemElement.querySelector('.qty-input');
+            const qtyMinusBtn = itemElement.querySelector('.qty-minus');
+            const qtyPlusBtn = itemElement.querySelector('.qty-plus');
+            const confirmAddBtn = itemElement.querySelector('.confirm-add');
 
-    for (const [item, qty] of Object.entries(cart)) {
-      const pricePerKg = PRICES[item];
-      const subtotal = (qty / 1000) * pricePerKg;
-      total += subtotal;
-        message += `\nDelivery: Free\nTotal: ₹${Math.round(total)}\n`;
+            initialBtn.addEventListener('click', () => {
+                initialBtn.classList.add('hidden');
+                quantityControls.classList.remove('hidden');
+                if (cart[item]) {
+                    qtyInput.value = cart[item];
+                    confirmAddBtn.textContent = 'Update';
+                } else {
+                    qtyInput.value = 500;
+                    confirmAddBtn.textContent = 'Add';
+                }
+            });
 
-    }
+            qtyMinusBtn.addEventListener('click', () => {
+                let currentValue = parseInt(qtyInput.value, 10);
+                if (currentValue > parseInt(qtyInput.min, 10)) {
+                    qtyInput.value = currentValue - parseInt(qtyInput.step, 10);
+                }
+            });
 
-    total += 0;
-    message += `\nDelivery: ₹0\nTotal: ₹${Math.round(total)}\n`;
+            qtyPlusBtn.addEventListener('click', () => {
+                let currentValue = parseInt(qtyInput.value, 10);
+                if (currentValue < parseInt(qtyInput.max, 10)) {
+                    qtyInput.value = currentValue + parseInt(qtyInput.step, 10);
+                }
+            });
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        const locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        message += `\n📍 Location: ${locationLink}`;
-        const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
-        window.open(waUrl, '_blank');
-      }, () => {
-        alert("⚠️ Please allow location access to continue.");
-      });
-    } else {
-      alert("❌ Geolocation not supported.");
-    }
-  }
+            confirmAddBtn.addEventListener('click', () => {
+                addItemToCart(itemElement);
+            });
 
-  function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-</script>
+            qtyInput.addEventListener('change', () => {
+                let currentValue = parseInt(qtyInput.value, 10);
+                const min = parseInt(qtyInput.min, 10);
+                const max = parseInt(qtyInput.max, 10);
 
+                if (isNaN(currentValue) || currentValue < min) {
+                    qtyInput.value = min;
+                } else if (currentValue > max) {
+                    qtyInput.value = max;
+                }
+            });
+
+            if (cart[item]) {
+                initialBtn.textContent = `Added: ${cart[item]}g`;
+            }
+        });
+
+        function submitOrder() {
+            if (Object.keys(cart).length === 0) {
+                alert("❗ Please add at least one item to cart.");
+                return;
+            }
+
+            let message = "Hello, I'd like to order:\n\n";
+            let total = 0;
+
+            for (const [item, qty] of Object.entries(cart)) {
+                const pricePerKg = PRICES[item];
+                const subtotal = (qty / 1000) * pricePerKg;
+                total += subtotal;
+                message += `- ${capitalize(item)} Chicken: ${qty}g (₹${Math.round(subtotal)})\n`;
+            }
+
+            message += `\nDelivery: Free`;
+            message += `\nTotal: ₹${Math.round(total)}`;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const { latitude, longitude } = pos.coords;
+                    const locationLink = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+                    message += `\n\n📍 My Location: ${locationLink}`;
+                    const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message)}`;
+                    window.open(waUrl, '_blank');
+                }, (error) => {
+                    console.error("Geolocation error:", error);
+                    alert("⚠️ Could not get your location. Please ensure location access is allowed.");
+                    const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message + "\n\n📍 Location permission denied.")}`;
+                    window.open(waUrl, '_blank');
+                });
+            } else {
+                alert("❌ Geolocation not supported by your browser.");
+                const waUrl = `https://wa.me/917801035193?text=${encodeURIComponent(message + "\n\n📍 Geolocation not supported.")}`;
+                window.open(waUrl, '_blank');
+            }
+        }
+
+        updateCartSummary();
+
+    </script>
 </body>
 </html>
