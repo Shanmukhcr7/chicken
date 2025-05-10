@@ -135,28 +135,28 @@
 }
 
   function updateCartSummary() {
-    const summaryBox = document.getElementById("cartSummary");
+  const summaryBox = document.getElementById("cartSummary");
 
-    if (Object.keys(cart).length === 0) {
-      summaryBox.innerHTML = "🛒 No items added.";
-      return;
-    }
-
-    let summaryHTML = "<strong>🧾 Order Summary:</strong><br><ul>";
-    let total = 0;
-
-    for (const [item, qty] of Object.entries(cart)) {
-      const pricePerKg = PRICES[item];
-      const subtotal = (qty / 1000) * pricePerKg;
-      total += subtotal;
-
-      summaryHTML += `<li>${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}</li>`;
-    }
-
-    total += 0; // delivery charge
-    summaryHTML += `</ul>🚚 Delivery: ₹0<br><strong>Total: ₹${Math.round(total)}</strong>`;
-    summaryBox.innerHTML = summaryHTML;
+  if (Object.keys(cart).length === 0) {
+    summaryBox.innerHTML = "🛒 No items added.";
+    return;
   }
+
+  let summaryHTML = "<strong>🧾 Order Summary:</strong><br><ul>";
+  let total = 0;
+
+  for (const [item, qty] of Object.entries(cart)) {
+    const pricePerKg = PRICES[item];
+    const subtotal = (qty / 1000) * pricePerKg;
+    total += subtotal;
+
+    summaryHTML += `<li>${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}</li>`;
+  }
+
+  summaryHTML += `</ul>🚚 Free Delivery<br><strong>Total: ₹${Math.round(total)}</strong>`;
+  summaryBox.innerHTML = summaryHTML;
+}
+
 
   function submitOrder() {
     if (Object.keys(cart).length === 0) {
@@ -171,7 +171,8 @@
       const pricePerKg = PRICES[item];
       const subtotal = (qty / 1000) * pricePerKg;
       total += subtotal;
-      message += `${capitalize(item)} Chicken: ${qty}g – ₹${Math.round(subtotal)}\n`;
+        message += `\nDelivery: Free\nTotal: ₹${Math.round(total)}\n`;
+
     }
 
     total += 0;
